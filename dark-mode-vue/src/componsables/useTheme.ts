@@ -1,34 +1,32 @@
-import { onMounted, ref, watch } from "vue";
+// src/composables/useTheme.ts
+import { ref, onMounted, watch } from 'vue'
 
 export function useTheme() {
-  const theme = ref(false);
+  const theme = ref(false) // `false` para claro, `true` para oscuro
 
   const toggleDarkMode = () => {
-    theme.value = !theme.value;
-    applyDarkMode();
-  };
+    theme.value = !theme.value
+    applyTheme()
+  }
 
-  const applyDarkMode = () => {
-    const root = document.documentElement;
+  const applyTheme = () => {
+    const root = document.documentElement
     if (theme.value) {
-      root.classList.add("dark");
+      root.classList.add('dark')
     } else {
-      root.classList.remove("dark");
+      root.classList.remove('dark')
     }
-  };
+  }
 
   onMounted(() => {
-    // Cargar preferencia desde localStorage
-    const storedValue = localStorage.getItem("darkMode");
-    theme.value = storedValue ? JSON.parse(storedValue) : false;
-
-    applyDarkMode();
-  });
+    const storedTheme = localStorage.getItem('theme')
+    theme.value = storedTheme ? JSON.parse(storedTheme) : false
+    applyTheme()
+  })
 
   watch(theme, (newValue) => {
-    // Guardar preferencia en localStorage
-    localStorage.setItem("darkMode", JSON.stringify(newValue));
-  });
+    localStorage.setItem('theme', JSON.stringify(newValue))
+  })
 
-  return { theme, toggleDarkMode };
+  return { theme, toggleDarkMode }
 }
